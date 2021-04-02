@@ -31,6 +31,7 @@ class Ranking_System(object):
 
     def add_player(self, player: Player):
         self.player_list.append(player)
+        self.rank()
 
     def remove_player(self, player: Player):
         for index in range(len(self.player_list)):
@@ -65,6 +66,12 @@ class Ranking_System(object):
             return '没有找到该选手'
         return ranking, self.rankings[ranking].get_rating()
 
+    def get_player_list_by_ranking_list(self, ranking_list: list[int]) -> list[Player]:
+        player_list = []
+        for ranking in ranking_list:
+            player_list.append(self.rankings[ranking])
+        return player_list
+
     @staticmethod
     def elo_win_rate_predict(player1: Player,
                              team: list[Player] = [], opponents: list[Player] = []) -> float or str:
@@ -81,10 +88,11 @@ class Ranking_System(object):
 
     @staticmethod
     def elo_rating_calculate(player: Player, win_rate_prediction: float,
-                             result: float, K:float = 17) -> int:
+                             result: float, K: float = 17) -> int:
         return int(round(player.get_rating() + K * (result - win_rate_prediction)))
 
-    def match(self, team0: list[Player] = [], team1: list[Player] = [], result: float = 0, K: float = 17):
+    def match(self, team0: list[Player] = [], team1: list[Player] = [],
+              result: float = 0, K: float = 17):  # 默认team0为败方
         if team0 == [] or team1 == []:
             return ValueError
         win_rate_prediction_list_0 = []
@@ -97,5 +105,6 @@ class Ranking_System(object):
             new_rating = self.elo_rating_calculate(team0[index], win_rate_prediction_list_0[index], result, K)
             team0[index].change_rating(new_rating)
         for index in range(len(team1)):
-            new_rating = self.elo_rating_calculate(team1[index], win_rate_prediction_list_1[index], result, K)
+            new_rating = self.elo_rating_calculate(team1[index], win_rate_prediction_list_1[index], 1 - result, K)
             team1[index].change_rating(new_rating)
+        self.rank()
