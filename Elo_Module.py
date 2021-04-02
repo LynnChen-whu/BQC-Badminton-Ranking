@@ -1,5 +1,5 @@
 # -*- coding = utf-8 -*-
-# @Time : 2021-4-2 8:21
+# @Time : 2021/4/1 22:30
 # @Author : Lynn
 # @File : Elo_Module.py
 # @Software : PyCharm
@@ -38,6 +38,9 @@ class Ranking_System(object):
             if self.player_list[index] == player:
                 del self.player_list[index]
         self.rank()
+
+    def get_player_list(self):
+        return self.player_list
 
     @staticmethod
     def get_player_s_rating(player: Player) -> int:
