@@ -74,6 +74,12 @@ class Ranking_System(object):
             player_list.append(self.rankings[ranking])
         return player_list
 
+    def get_player_list_by_name_list(self, name_list: list[str]) -> list[Player]:
+        player_list = []
+        for name in name_list:
+            player_list.append(self.inquire_by_name(name))
+        return player_list
+
     @staticmethod
     def elo_win_rate_predict(player1: Player,
                              team: list[Player] = [], opponents: list[Player] = []) -> float or str:
