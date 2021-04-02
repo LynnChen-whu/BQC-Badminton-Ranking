@@ -57,17 +57,16 @@ class Ranking_System(object):
 
     def inquire_by_ranking(self, ranking: int = 1) -> tuple[str, int] or str:
         if ranking in self.rankings:
-            return self.rankings[ranking].get_name(), self.rankings[ranking].get_rating()
+            return self.rankings[ranking]
         else:
             return '该排名不存在'
 
     def inquire_by_name(self, name: str = '') -> tuple[int, int] or str:
-        for ranking in list(self.rankings.keys()):
-            if self.rankings[ranking].get_name() == name:
-                break
+        for player in self.player_list:
+            if player.get_name() == name:
+                return player
         else:
             return '没有找到该选手'
-        return ranking, self.rankings[ranking].get_rating()
 
     def get_player_list_by_ranking_list(self, ranking_list: list[int]) -> list[Player]:
         player_list = []
@@ -110,4 +109,9 @@ class Ranking_System(object):
         for index in range(len(team1)):
             new_rating = self.elo_rating_calculate(team1[index], win_rate_prediction_list_1[index], 1 - result, K)
             team1[index].change_rating(new_rating)
+        self.rank()
+
+    def reset_rating(self):
+        for player in self.player_list:
+            player.change_rating()
         self.rank()
